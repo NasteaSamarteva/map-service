@@ -56,4 +56,5 @@ public class RestaurantController {
         Restaurant restaurantById = restaurantService.getRestaurantById(id);
         return restaurantById;
     }
+
 }
