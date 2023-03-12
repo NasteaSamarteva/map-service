@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -30,22 +31,31 @@ public class RestaurantService {
 
     public void updateRestaurantInfo(UUID id, RestaurantUpdateRequest restaurantUpdateRequest) {
         Optional<Restaurant> restaurantToUpdate = restaurantRepository.findById(id);
-
-        // FIXME remove .get()
-        Restaurant restaurant = restaurantToUpdate.get();
+        Restaurant restaurant = restaurantToUpdate.orElseThrow(() -> new NoSuchElementException("Restaurant with id %s does not exist".formatted(id)));
 
         if (restaurantUpdateRequest.getName() != null) {
             restaurant.setName(restaurantUpdateRequest.getName());
         }
-        if (restaurantUpdateRequest.getAddress() !=null){
+        if (restaurantUpdateRequest.getAddress() != null) {
             restaurant.setAddress(restaurantUpdateRequest.getAddress());
         }
         if (restaurantUpdateRequest.getLatitude() != null) {
             restaurant.setLatitude(restaurantUpdateRequest.getLatitude());
         }
-        if (restaurantUpdateRequest.getLongitude() !=null){
+        if (restaurantUpdateRequest.getLongitude() != null) {
             restaurant.setLongitude(restaurantUpdateRequest.getLongitude());
         }
         restaurantRepository.save(restaurant);
+    }
+
+
+    public Restaurant getRestaurantById(UUID id) {
+        Optional<Restaurant> byId = restaurantRepository.findById(id);
+        Restaurant restaurant = byId
+                .orElseThrow(() -> new NoSuchElementException("Restaurant with id %s does not exist".formatted(id)));
+
+        return restaurant;
+
+
     }
 }
