@@ -5,6 +5,7 @@ import com.mapservice.entity.Customer;
 import com.mapservice.repository.CustomerRepository;
 import com.mapservice.repository.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -15,12 +16,13 @@ public class CustomerService {
     private CustomerRepository customerRepository;
     @Autowired
     private RoleRepository roleRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
-    public void customerRegistration(CustomerRegistrationRequest customerRegistrationRequest ){
+    public void customerRegistration(CustomerRegistrationRequest customerRegistrationRequest) {
         Customer customer = new Customer();
         customer.setUsername(customerRegistrationRequest.getUsername());
-        // TODO encrypt
-        customer.setPassword(customerRegistrationRequest.getPassword());
+        customer.setPassword(passwordEncoder.encode(customerRegistrationRequest.getPassword()));
         customer.setEmail(customerRegistrationRequest.getEmail());
         customer.setId(UUID.randomUUID());
         customer.setRole(roleRepository.findByName("USER"));

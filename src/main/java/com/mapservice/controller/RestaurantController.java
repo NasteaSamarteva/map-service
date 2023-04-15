@@ -5,6 +5,7 @@ import com.mapservice.entity.Restaurant;
 import com.mapservice.service.RestaurantService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,12 +33,14 @@ public class RestaurantController {
         return allRestaurants;
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public UUID saveRestaurant(@RequestBody Restaurant restaurant) {
         UUID restaurantID = restaurantService.saveRestaurant(restaurant);
         return restaurantID;
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping
     @RequestMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -45,6 +48,8 @@ public class RestaurantController {
         restaurantService.delete(id);
     }
 
+
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void updateRestaurantInfo(@PathVariable UUID id, @RequestBody RestaurantUpdateRequest restaurantUpdateRequest) {
