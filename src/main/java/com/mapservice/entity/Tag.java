@@ -15,6 +15,6 @@ public class Tag {
     @Id
     private UUID id;
     private String name;
-    @ManyToMany
+    @ManyToMany(mappedBy = "tags")
     private List<Restaurant> restaurants;
 }

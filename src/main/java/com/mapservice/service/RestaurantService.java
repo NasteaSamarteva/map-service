@@ -1,9 +1,12 @@
 package com.mapservice.service;
 
+import com.mapservice.dto.GetRestaurantByTagRequest;
 import com.mapservice.dto.RestaurantUpdateRequest;
 import com.mapservice.entity.Restaurant;
+import com.mapservice.entity.Tag;
 import com.mapservice.exception.MapServiceException;
 import com.mapservice.repository.RestaurantRepository;
+import com.mapservice.repository.TagRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -16,6 +19,8 @@ import java.util.UUID;
 public class RestaurantService {
     @Autowired
     private RestaurantRepository restaurantRepository;
+    @Autowired
+    private TagRepository tagRepository;
 
     public List<Restaurant> getAllRestaurants() {
         return restaurantRepository.findAll();
@@ -56,5 +61,10 @@ public class RestaurantService {
                 .orElseThrow(() -> new MapServiceException("Restaurant with id %s does not exist".formatted(id), HttpStatus.NOT_FOUND));
 
         return restaurant;
+    }
+
+    public List<Restaurant> getRestaurantsByTags(GetRestaurantByTagRequest getRestaurantByTagRequest){
+        List<Tag> tags = tagRepository.findTagsByNamesIn(getRestaurantByTagRequest.getTags());
+       return restaurantRepository.findRestaurantByTags(tags,tags.size());
     }
 }

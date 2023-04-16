@@ -1,5 +1,6 @@
 package com.mapservice.controller;
 
+import com.mapservice.dto.GetRestaurantByTagRequest;
 import com.mapservice.dto.RestaurantDto;
 import com.mapservice.dto.RestaurantUpdateRequest;
 import com.mapservice.entity.Restaurant;
@@ -17,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -31,23 +31,13 @@ public class RestaurantController {
     @GetMapping
     @RequestMapping("/all")
     public List<RestaurantDto> getAllRestaurants() {
-        List<Restaurant> allRestaurants1 = restaurantService.getAllRestaurants();
-        List<RestaurantDto> allRestaurants = new ArrayList<>();
-        for (Restaurant restaurant: allRestaurants1
-             ) { RestaurantDto restaurantDto = new RestaurantDto();
-            restaurantDto.setId(restaurant.getId());
-            restaurantDto.setName(restaurant.getName());
-            restaurantDto.setCategory(restaurant.getCategory());
-            restaurantDto.setAddress(restaurant.getAddress());
-            restaurantDto.setLatitude(restaurant.getLatitude());
-            restaurantDto.setLongitude(restaurant.getLongitude());
-            allRestaurants.add(restaurantDto);
-        }
-        return allRestaurants;
+        return restaurantService.getAllRestaurants().stream()
+                .map(this::mapRestaurantToDto)
+                .toList();
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    
+
     @PostMapping
     public UUID saveRestaurant(@RequestBody Restaurant restaurant) {
         UUID restaurantID = restaurantService.saveRestaurant(restaurant);
@@ -74,6 +64,25 @@ public class RestaurantController {
     public Restaurant getRestaurantById(@PathVariable UUID id) {
         Restaurant restaurantById = restaurantService.getRestaurantById(id);
         return restaurantById;
+    }
+
+    @GetMapping("/byTag")
+    public List<RestaurantDto> getRestaurantsByTags(@RequestBody GetRestaurantByTagRequest getRestaurantByTagRequest) {
+        return restaurantService.getRestaurantsByTags(getRestaurantByTagRequest).stream()
+                .map(this::mapRestaurantToDto)
+                .toList();
+    }
+
+    private RestaurantDto mapRestaurantToDto(Restaurant restaurant) {
+        RestaurantDto restaurantDto = new RestaurantDto();
+        restaurantDto.setId(restaurant.getId());
+        restaurantDto.setName(restaurant.getName());
+        restaurantDto.setCategory(restaurant.getCategory());
+        restaurantDto.setAddress(restaurant.getAddress());
+        restaurantDto.setLatitude(restaurant.getLatitude());
+        restaurantDto.setLongitude(restaurant.getLongitude());
+
+        return restaurantDto;
     }
 
 }

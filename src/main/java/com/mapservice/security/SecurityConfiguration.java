@@ -28,7 +28,7 @@ public class SecurityConfiguration {
                 .csrf()
                 .disable()
                 .authorizeHttpRequests(authz -> authz
-                        .requestMatchers("/api/customer/registration", "/api/restaurant/all").permitAll()
+                        .requestMatchers("/api/customer/registration", "/api/restaurant/all", "/api/restaurant/byTag").permitAll()
                         .anyRequest().authenticated());
 
         http.httpBasic();
