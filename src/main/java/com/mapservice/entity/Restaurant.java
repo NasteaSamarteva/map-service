@@ -3,9 +3,13 @@ package com.mapservice.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -22,6 +26,8 @@ public class Restaurant {
     private Float latitude;
     private Float longitude;
     private Category category;
-
-
+    @OneToMany(mappedBy = "restaurant")
+    private List<Comment> comments;
+    @ManyToMany
+    private List<Tag> tags;
 }

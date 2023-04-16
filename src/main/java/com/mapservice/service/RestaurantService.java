@@ -2,12 +2,13 @@ package com.mapservice.service;
 
 import com.mapservice.dto.RestaurantUpdateRequest;
 import com.mapservice.entity.Restaurant;
+import com.mapservice.exception.MapServiceException;
 import com.mapservice.repository.RestaurantRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -31,7 +32,7 @@ public class RestaurantService {
 
     public void updateRestaurantInfo(UUID id, RestaurantUpdateRequest restaurantUpdateRequest) {
         Optional<Restaurant> restaurantToUpdate = restaurantRepository.findById(id);
-        Restaurant restaurant = restaurantToUpdate.orElseThrow(() -> new NoSuchElementException("Restaurant with id %s does not exist".formatted(id)));
+        Restaurant restaurant = restaurantToUpdate.orElseThrow(() -> new MapServiceException("Restaurant with id %s does not exist".formatted(id), HttpStatus.NOT_FOUND));
 
         if (restaurantUpdateRequest.getName() != null) {
             restaurant.setName(restaurantUpdateRequest.getName());
@@ -52,10 +53,8 @@ public class RestaurantService {
     public Restaurant getRestaurantById(UUID id) {
         Optional<Restaurant> byId = restaurantRepository.findById(id);
         Restaurant restaurant = byId
-                .orElseThrow(() -> new NoSuchElementException("Restaurant with id %s does not exist".formatted(id)));
+                .orElseThrow(() -> new MapServiceException("Restaurant with id %s does not exist".formatted(id), HttpStatus.NOT_FOUND));
 
         return restaurant;
-
-
     }
 }

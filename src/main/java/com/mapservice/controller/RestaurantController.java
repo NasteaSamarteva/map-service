@@ -1,5 +1,6 @@
 package com.mapservice.controller;
 
+import com.mapservice.dto.RestaurantDto;
 import com.mapservice.dto.RestaurantUpdateRequest;
 import com.mapservice.entity.Restaurant;
 import com.mapservice.service.RestaurantService;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -28,12 +30,24 @@ public class RestaurantController {
 
     @GetMapping
     @RequestMapping("/all")
-    public List<Restaurant> getAllRestaurants() {
-        List<Restaurant> allRestaurants = restaurantService.getAllRestaurants();
+    public List<RestaurantDto> getAllRestaurants() {
+        List<Restaurant> allRestaurants1 = restaurantService.getAllRestaurants();
+        List<RestaurantDto> allRestaurants = new ArrayList<>();
+        for (Restaurant restaurant: allRestaurants1
+             ) { RestaurantDto restaurantDto = new RestaurantDto();
+            restaurantDto.setId(restaurant.getId());
+            restaurantDto.setName(restaurant.getName());
+            restaurantDto.setCategory(restaurant.getCategory());
+            restaurantDto.setAddress(restaurant.getAddress());
+            restaurantDto.setLatitude(restaurant.getLatitude());
+            restaurantDto.setLongitude(restaurant.getLongitude());
+            allRestaurants.add(restaurantDto);
+        }
         return allRestaurants;
     }
 
     @PreAuthorize("hasRole('ADMIN')")
+    
     @PostMapping
     public UUID saveRestaurant(@RequestBody Restaurant restaurant) {
         UUID restaurantID = restaurantService.saveRestaurant(restaurant);

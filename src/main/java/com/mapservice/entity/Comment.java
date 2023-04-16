@@ -2,19 +2,20 @@ package com.mapservice.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.List;
 import java.util.UUID;
+
 @Entity
 @Getter
 @Setter
-public class Tag {
+public class Comment {
     @Id
     private UUID id;
-    private String name;
-    @ManyToMany
-    private List<Restaurant> restaurants;
+    private String message;
+    private String username;
+    @ManyToOne
+    private Restaurant restaurant;
 }
