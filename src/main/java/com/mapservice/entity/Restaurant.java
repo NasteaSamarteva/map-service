@@ -15,8 +15,6 @@ import java.util.List;
 import java.util.UUID;
 
 @Entity
-//сущность, этот объект(то есть все поля) равны столбцам в базе данных.
-// когда будет создоваться объект ресторан он будет брать все данные из столбцов базы данных
 @Getter
 @Setter
 public class Restaurant {

@@ -37,11 +37,9 @@ public class RestaurantController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-
     @PostMapping
     public UUID saveRestaurant(@RequestBody Restaurant restaurant) {
-        UUID restaurantID = restaurantService.saveRestaurant(restaurant);
-        return restaurantID;
+        return restaurantService.saveRestaurant(restaurant);
     }
 
     @PreAuthorize("hasRole('ADMIN')")
@@ -62,8 +60,7 @@ public class RestaurantController {
 
     @GetMapping("/{id}")
     public Restaurant getRestaurantById(@PathVariable UUID id) {
-        Restaurant restaurantById = restaurantService.getRestaurantById(id);
-        return restaurantById;
+        return restaurantService.getRestaurantById(id);
     }
 
     @GetMapping("/byTag")
