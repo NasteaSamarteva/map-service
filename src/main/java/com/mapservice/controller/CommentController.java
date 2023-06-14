@@ -1,19 +1,15 @@
 package com.mapservice.controller;
 
 import com.mapservice.dto.AddCommentRequest;
+import com.mapservice.dto.CommentDto;
 import com.mapservice.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -31,10 +27,15 @@ public class CommentController {
     }
 
     @PreAuthorize("hasAnyRole('ADMIN','USER')")
-    @DeleteMapping
-    @RequestMapping("/{id}")
+    @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteComment(Authentication authentication, @PathVariable UUID id) {
         commentService.deleteComment(authentication, id);
+    }
+
+    @PreAuthorize("hasAnyRole('ADMIN','USER')")
+    @GetMapping("/{idRestaurant}")
+    public List<CommentDto> getRestaurantComments(@PathVariable UUID idRestaurant) {
+        return commentService.getRestaurantComments(idRestaurant);
     }
 }

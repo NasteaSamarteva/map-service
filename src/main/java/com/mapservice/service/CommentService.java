@@ -1,6 +1,7 @@
 package com.mapservice.service;
 
 import com.mapservice.dto.AddCommentRequest;
+import com.mapservice.dto.CommentDto;
 import com.mapservice.entity.Comment;
 import com.mapservice.entity.Restaurant;
 import com.mapservice.exception.MapServiceException;
@@ -12,6 +13,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -52,5 +54,21 @@ public class CommentService {
         if (!comment.getUsername().equals(authentication.getName())) {
             throw new MapServiceException("This comment doesn't belong to user %s".formatted(authentication.getName()), HttpStatus.FORBIDDEN);
         }
+    }
+
+    public List<CommentDto> getRestaurantComments(UUID idRestaurant) {
+        if (!restaurantRepository.existsById(idRestaurant)) {
+            throw new MapServiceException("Restaurant does not exist", HttpStatus.NOT_FOUND);
+        }
+
+        return commentRepository.findByRestaurantId(idRestaurant).stream().map(this::mapCommentToDto).toList();
+    }
+
+    private CommentDto mapCommentToDto(Comment comment) {
+        CommentDto dto = new CommentDto();
+        dto.setComment(comment.getMessage());
+        dto.setId(comment.getId());
+        return dto;
+
     }
 }

@@ -4,6 +4,7 @@ import com.mapservice.entity.Category;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -15,4 +16,5 @@ public class RestaurantDto {
     private Float latitude;
     private Float longitude;
     private Category category;
+    private List<String> tags;
 }
